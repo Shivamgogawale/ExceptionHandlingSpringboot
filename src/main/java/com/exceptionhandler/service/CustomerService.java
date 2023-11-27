@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.exceptionhandler.dao.CustomerRepository;
 import com.exceptionhandler.entity.Customer;
+import com.exceptionhandler.exception.NoCustomerFoundException;
 import com.exceptionhandler.request.CustomerRequest;
 
 
@@ -25,6 +26,7 @@ public class CustomerService {
 		logger.info("CustomerService.saveCustomer() is start");
 		Customer customer=Customer.build(0,customerRequest.getName(),customerRequest.getAddress(),customerRequest.getAge(),customerRequest.getContactNumber());
 		Customer saveCustomer = customerRepository.save(customer);
+		
 		logger.info("CustomerService.saveCustomer() is end",saveCustomer);
 		return saveCustomer;
 	}
@@ -34,10 +36,21 @@ public class CustomerService {
 			logger.info("CustomerService.getAllCustomer() is start");
 		 return customerRepository.findAll();
 	 }
-	 
-	 public Customer getCustomer(int id)
-	 {
-			logger.info("CustomerService.getCustomer() is start");
-		 return customerRepository.findById(id);
-	 }
+
+	public Customer getCustomer(int id)
+	{
+	logger.info("CustomerService.getCustomer() is start");
+	Customer findById = null;
+		findById = customerRepository.findById(id);
+		if (findById == null)
+			throw new NoCustomerFoundException("Customer not found");
+		return findById;
+		
+		}
+
+	public String deleteCustomer(int id) {
+		logger.info("CustomerService.getCustomer() is start");
+		 customerRepository.deleteById(id);
+		 return "Record is deleted";
+	}
 }

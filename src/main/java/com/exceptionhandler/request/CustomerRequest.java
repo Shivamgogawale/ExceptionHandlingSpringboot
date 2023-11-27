@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CustomerRequest {
 
-	@NotBlank
+	@NotBlank(message = "name should'nt be null or empty")
 	private String name;
 
 	@NotEmpty
